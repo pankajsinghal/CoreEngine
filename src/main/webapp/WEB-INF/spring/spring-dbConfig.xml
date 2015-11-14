@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- To change this template, choose Tools | Templates and open the template 
+	in the editor. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	<!-- <bean id="dataSource0" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
+		lazy-init="false" p:driverClass="${DbConnection.scp.JdbcDrivers}" p:jdbcUrl="${DbConnection.scp.DSNurl}" 
+		p:user="${DbConnection.scp.User}" p:password="${DbConnection.scp.Password}" 
+		p:autoCommitOnClose="true" p:maxPoolSize="${DbConnection.scp.maxPool}" p:minPoolSize="${DbConnection.scp.minPool}" 
+		p:initialPoolSize="${DbConnection.scp.initialPool}" p:preferredTestQuery="Select 
+		1" p:testConnectionOnCheckout="true" p:testConnectionOnCheckin="true" p:debugUnreturnedConnectionStackTraces="false" 
+		p:forceIgnoreUnresolvedTransactions="true" p:connectionTesterClassName="com.mchange.v2.c3p0.impl.DefaultConnectionTester" 
+		p:automaticTestTable="Select 1" p:maxIdleTime="120" p:idleConnectionTestPeriod="10" 
+		destroy-method="close" /> -->
+	<!-- <bean id="dataSourceQuery" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
+		lazy-init="false" p:driverClass="${DbConnection.scp.JdbcDrivers}" p:jdbcUrl="${DbConnection.scp.DSNurl}" 
+		p:user="${DbConnection.scp.User}" p:password="${DbConnection.scp.Password}" 
+		p:autoCommitOnClose="true" p:maxPoolSize="10" p:minPoolSize="5" p:initialPoolSize="10" 
+		p:preferredTestQuery="Select 1" p:testConnectionOnCheckout="true" p:testConnectionOnCheckin="true" 
+		p:debugUnreturnedConnectionStackTraces="false" p:forceIgnoreUnresolvedTransactions="true" 
+		p:connectionTesterClassName="com.mchange.v2.c3p0.impl.DefaultConnectionTester" 
+		p:automaticTestTable="Select 1" p:maxIdleTime="120" p:idleConnectionTestPeriod="10" 
+		destroy-method="close" /> -->
+
+	<!-- <bean id="dataSourcePool" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
+		lazy-init="false" p:driverClass="${DbConnection.scppool.JdbcDrivers}" p:jdbcUrl="${DbConnection.scppool.DSNurl}" 
+		p:user="${DbConnection.scppool.User}" p:password="${DbConnection.scppool.Password}" 
+		p:autoCommitOnClose="true" p:maxPoolSize="${DbConnection.scppool.maxPool}" 
+		p:minPoolSize="${DbConnection.scppool.minPool}" p:initialPoolSize="${DbConnection.scppool.initialPool}" 
+		p:preferredTestQuery="Select 1" p:testConnectionOnCheckout="true" p:testConnectionOnCheckin="true" 
+		p:debugUnreturnedConnectionStackTraces="false" p:forceIgnoreUnresolvedTransactions="true" 
+		p:connectionTesterClassName="com.mchange.v2.c3p0.impl.DefaultConnectionTester" 
+		p:automaticTestTable="Select 1" p:maxIdleTime="120" p:idleConnectionTestPeriod="10" 
+		destroy-method="close" /> -->
+
+
+	<bean id="dataSource0" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${DbConnection.scp.JdbcDrivers}" />
+		<property name="jdbcUrl" value="${DbConnection.scp.DSNurl}" />
+		<property name="username" value="${DbConnection.scp.User}" />
+		<property name="password" value="${DbConnection.scp.Password}" />
+		<property name="idleConnectionTestPeriodInSeconds" value="10" />
+		<property name="connectionTestStatement" value="Select 1" />
+		<property name="idleMaxAgeInMinutes" value="240" />
+		<property name="maxConnectionsPerPartition"
+			value="${DbConnection.scp.maxConnectionsPerPartition}" />
+		<property name="minConnectionsPerPartition"
+			value="${DbConnection.scp.minConnectionsPerPartition}" />
+		<property name="partitionCount" value="${DbConnection.scp.partitionCount}" />
+		<property name="acquireIncrement" value="5" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="acquireRetryDelayInMs" value="10" />
+		<property name="deregisterDriverOnClose" value="false" />
+	</bean>
+
+	<bean id="dataSourcePool" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${DbConnection.scppool.JdbcDrivers}" />
+		<property name="jdbcUrl" value="${DbConnection.scppool.DSNurl}" />
+		<property name="username" value="${DbConnection.scppool.User}" />
+		<property name="password" value="${DbConnection.scppool.Password}" />
+		<property name="idleConnectionTestPeriodInSeconds" value="10" />
+		<property name="connectionTestStatement" value="Select 1" />
+		<property name="idleMaxAgeInMinutes" value="240" />
+		<property name="maxConnectionsPerPartition"
+			value="${DbConnection.scppool.maxConnectionsPerPartition}" />
+		<property name="minConnectionsPerPartition"
+			value="${DbConnection.scppool.minConnectionsPerPartition}" />
+		<property name="partitionCount" value="${DbConnection.scppool.partitionCount}" />
+		<property name="acquireIncrement" value="5" />
+		<property name="statementsCacheSize" value="100" />
+		<property name="acquireRetryDelayInMs" value="10" />
+		<property name="deregisterDriverOnClose" value="false" />
+	</bean>
+
+	<bean id="sessionFactory0"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"
+		destroy-method="destroy">
+		<property name="dataSource">
+			<ref bean="dataSource0" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${DbConnection.scp.hibernate.dialect}</prop>
+				<prop key="hibernate.show_sql">${DbConnection.scp.hibernate.show_sql}</prop>
+				<prop key="hibernate.hbm2ddl.auto">${DbConnection.scp.hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.cache.region.factory_class">${DbConnection.scp.hibernate.cache.region.factory_class}
+				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">${DbConnection.scp.hibernate.cache.use_second_level_cache}
+				</prop>
+				<prop key="hibernate.cache.use_query_cache">${DbConnection.scp.hibernate.cache.use_query_cache}
+				</prop>
+			</props>
+		</property>
+		<property name="annotatedClasses">
+			<list>
+				<value>com.bng.core.entity.Bookmark</value>
+				<value>com.bng.core.entity.CircleMapper</value>
+				<value>com.bng.core.entity.IvrBlacklist</value>
+				<value>com.bng.core.entity.Subscription</value>
+				<value>com.bng.core.entity.Unsubscription</value>
+				<value>com.bng.core.entity.Visitors</value>
+				<value>com.bng.core.entity.IvrWhitelist</value>
+				<value>com.bng.core.entity.IvrRedcarpetlist</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="transactionManager0"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory0" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager0" />
+
+	<import resource="Subscription.xml" />
+	<import resource="Unsubscription.xml" />
+	<import resource="BlackListed.xml" />
+	<import resource="CircleMapper.xml" />
+	<import resource="CheckDB.xml" />
+	<import resource="Bookmark.xml"/>
+	<import resource="Visitors.xml"/>
+	<import resource="WhiteListed.xml"/>
+	<import resource="RedCarpetList.xml"/>
+	<import resource="OBDNumber.xml"/>
+	<import resource="SessionFactoryList.xml" />
+</beans>

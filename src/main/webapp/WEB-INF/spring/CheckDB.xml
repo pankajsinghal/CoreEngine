@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	
+	<bean id="check" class="com.bng.core.bean.CheckDB">
+		<property name="subsBoImpl" ref="SubscriptionBoImpl" />
+		<property name="unsubBoImpl" ref="UnsubscriptionBoImpl" />
+		<property name="blackListedBoImpl" ref="blackListedBoImpl" />
+		<property name="circleBoImpl" ref="circleBoImpl" />
+		<property name="visitorsBoImpl" ref="visitorsBoImpl" />
+		<property name="bookmarkBoImpl" ref="bookmarkBoImpl" />
+		<property name="redCarpetListBoImpl" ref="redCarpetListBoImpl" />
+		<property name="whiteListedBoImpl" ref="whiteListedBoImpl"/>
+	</bean>
+
+	<bean id="start" class="com.bng.core.bean.Start">
+		<property name="circleBoImpl" ref="circleBoImpl" />
+		<property name="recordFilePath" value="${filePath.recordFile}" />
+		<property name="transactionidlength" value="${transactionidlength}" />
+	</bean>
+
+	<bean id="Utility" class="com.bng.core.utils.Utility">
+		<property name="subsBoImpl" ref="SubscriptionBoImpl" />
+		<property name="bookmarkBoImpl" ref="bookmarkBoImpl" />
+		<property name="visitorsBoImpl" ref="visitorsBoImpl" />
+		<property name="memCacheJSon" ref="jredisMemCacheJson" />
+		<property name="countryCodes" value ="${CountryCodes}"/>
+		<property name="mscCode" value="${dialout.mscCode}"/>
+		<property name="prefix" value="${bParty.prefix}"/>
+		<property name="suffix" value="${bParty.suffix}"/>
+	</bean>
+
+	<bean id="url" class="com.bng.core.bean.Url">
+		<property name="urlHitter" ref="urlHitterQ" />
+		<property name="subsBoImpl" ref="SubscriptionBoImpl" />
+	</bean>
+
+	<bean id="urlHitterQ" class="com.bng.core.utils.UrlHitter"
+		init-method="init" />
+
+	<bean id="startRecord" class="com.bng.core.bean.StartRecord">
+		<property name="recordFilePath" value="${filePath.recordFile}" />
+	</bean>
+
+	<bean id="dial" class="com.bng.core.bean.Dial">
+		<property name="circleBoImpl" ref="circleBoImpl" />	
+		<property name="gapminutes" value="${gapminutes}"/>	
+		<property name="obdnumberbo" ref="obdnumberbo" />
+		<property name="APartyPrefix" value="${aParty.prefix}"/>	
+		<property name="APartySuffix" value="${aParty.suffix}"/>	
+	</bean>
+
+	<bean id="patch" class="com.bng.core.bean.Patch">
+	<property name="memCacheJSon" ref="jredisMemCacheJson" />
+	</bean>
+
+	<bean id="playContent" class="com.bng.core.bean.PlayContent">
+		<property name="bookmarkBoImpl" ref="bookmarkBoImpl" />
+	</bean>
+	
+	<bean id="recorddedication" class="com.bng.core.controller.recorddedication">
+		<property name="scheduletimegap" value="${scheduletimegap}"/>
+		<property name="trydurationminutes" value="${trydurationminutes}"/>
+		<property name="gapminutes" value="${gapminutes}"/>
+		<property name="obdnumberbo" ref="obdnumberbo" />
+	</bean>	
+		
+	<bean id="dynamicplay" class="com.bng.core.bean.DynamicPlay">
+		<property name="obdnumberbo" ref="obdnumberbo" />
+		<property name="gapminutes" value="${gapminutes}"/>
+	</bean>
+	
+	<bean id="multiplay" class="com.bng.core.bean.MultiPlay">
+		<property name="bookmarkBoImpl" ref="bookmarkBoImpl" />
+		<property name="memCacheJSon" ref="jredisMemCacheJson" />
+	</bean>
+	
+	
+</beans>
+ 
+ 
+ 

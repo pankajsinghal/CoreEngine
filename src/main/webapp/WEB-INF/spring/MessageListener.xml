@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:core="http://activemq.apache.org/schema/core" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd
+		http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-3.2.xsd">
+
+
+	<bean id="defaultMessageListenerContainerFactory"
+		class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean"
+		destroy-method="destroy">
+		<property name="targetBeanName">
+			<idref local="Listener" />
+		</property>
+	</bean>
+
+	<bean id="Listener"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		scope="prototype" destroy-method="destroy">
+		<property name="connectionFactory" ref="jmsPooledConnectionFactory" />
+		<property name="destination" ref="destinationOriginal" />
+		<property name="messageListener" ref="defaultMessageListener" />
+		<property name="sessionTransacted" value="false" />
+		<property name="idleConsumerLimit" value="1" />
+		<property name="idleTaskExecutionLimit" value="1" />
+		<property name="maxConcurrentConsumers" value="1" />
+		<property name="receiveTimeout" value="10000" />
+	</bean>
+
+	<bean id="destinationOriginal" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="original" />
+	</bean>
+
+
+	<bean id="defaultMessageListener" class="com.bng.core.queue.DefaultMessageListener"
+		scope="prototype">
+		<!-- <property name="sender" ref="messageSenderMiddle"></property> -->
+	</bean>
+
+	<bean id="engineFactory"
+		class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean"
+		destroy-method="destroy">
+		<property name="targetBeanName">
+			<!-- <idref local="coreMessageListener" /> -->
+			<idref local="engine" />
+		</property>
+	</bean>
+
+	<bean id="engine" class="com.bng.core.parser.Engine" scope="prototype">
+		<property name="controller" ref="controller" />
+		<property name="core" ref="core" />
+		<property name="memCacheJSon" ref="jredisMemCacheJson" />
+		<property name="ivrCodeLength" value="${IvrCode.Length}"/>
+		<property name="loadServiceurl" value="${LoadService.url.scp}"/>
+		<!-- <property name="sender" ref="messageSenderMiddle"></property> -->
+	</bean>
+
+	<bean id="cdrMessageListener" class="com.bng.core.cdr.CdrMessageListener">
+		<property name="pathPrefix" value="${CDR.path}"></property>
+	</bean>
+
+	<!-- <bean id="coreMessageListener" class="com.bng.core.queue.CoreMessageListener" 
+		scope="prototype"> <property name="sender" ref="messageSenderMiddle"></property> 
+		</bean> -->
+
+	<bean id="destination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="xmlparser" />
+	</bean>
+
+
+	<bean id="XMLListener"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		destroy-method="destroy">
+		<property name="connectionFactory" ref="jmsPooledConnectionFactory" />
+		<property name="destination" ref="destination" />
+		<property name="messageListener" ref="xmlParserMessageListener" />
+		<property name="sessionTransacted" value="false" />
+		<property name="idleConsumerLimit" value="1" />
+		<property name="idleTaskExecutionLimit" value="1" />
+		<property name="maxConcurrentConsumers" value="1" />
+		<property name="receiveTimeout" value="10000" />
+	</bean>
+
+	<bean id="xmlParserMessageListener" class="com.bng.core.parser.XmlParserMessageListener">
+		<property name="controller" ref="controller" />
+	</bean>
+	
+	<bean id="dbQueryListnerClass" class="com.bng.core.listner.DBMessageListener">
+		<property name="connectionPool" ref="dbConnectionPool" />
+	</bean>
+	
+	<bean id="dbConnectionPool" class="com.bng.core.utils.ConnectionPool" init-method="init" destroy-method="destroy">
+		<property name="boneCPDataSource" ref="dataSourcePool" />
+	</bean>
+	
+	<bean id="dbdirectQuery" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="dbdirectQuery" />
+	</bean>
+	
+	<bean id="dbQueryListner"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer"
+		destroy-method="destroy">
+		<property name="connectionFactory" ref="jmsPooledConnectionFactory" />
+		<property name="destination" ref="dbdirectQuery" />
+		<property name="messageListener" ref="dbQueryListnerClass" />
+		<property name="sessionTransacted" value="false" />
+		<property name="idleConsumerLimit" value="1" />
+		<property name="idleTaskExecutionLimit" value="1" />
+		<property name="maxConcurrentConsumers" value="18" />
+		<property name="receiveTimeout" value="10000" />
+	</bean>
+	
+</beans>
